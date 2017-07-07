@@ -1,0 +1,76 @@
+body{
+    float:left;
+    width: 100%;
+}
+.rowhead{
+    font-weight: bold;
+}
+td,th{
+    padding:0px 10px 10px 10px;
+
+}
+.namehead,.name{
+    width: 50%;
+}
+.name{
+    text-align: left;
+}
+.id{
+    width:20%;
+    text-align: center;
+}
+.no{
+    width: 10%;
+    text-align: center;
+}
+.age{
+    width: 10%;
+    text-align: center;
+}
+.roweven{
+    background-color: #d4d4d4;
+}
+table{
+    display: block;
+    border-collapse: collapse;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+th,td,tr{
+    border: 1px solid gray;
+}
+.panel{
+    position: absolute;
+    display: inline-block;
+    padding: 70px;
+    border: 1px dashed gray;
+    width: 20%;
+    text-align: center;
+    color: grey;
+}
+.bigbox{
+    display: inline-block;
+    width: 20%;
+}
+.box{
+    display: block;
+}
+p,input,select{
+    display: inline-block;
+}
+button{
+    display: block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+#myTable{
+    margin-top: 100px;
+}
+#colorTable{
+    margin-top: 100px;
+}
+.delete{
+    display: inline-block;
+}

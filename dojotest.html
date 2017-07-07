@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Hello Dojo!</title>   
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" type="text/css" href="styledojo.css">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+    <!--load jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- load Dojo -->
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
+            data-dojo-config="async: true"></script>
+    <script type="text/javascript">
+        require(["dijit/form/Button", "dojo/dom", "dojo/domReady!"], function(Button, dom){
+            // Create a button programmatically:
+            var myButton = new Button({
+                label: "Click me!",
+                onClick: function(){
+                    // Do something:
+                    dom.byId("result1").innerHTML += "Hello Dojo!! ";
+                }
+            }, "progButtonNode").startup();
+        });
+    </script>
+    <script>dojoConfig = {parseOnLoad: true}</script>
+	<script>
+		require(["dojo/parser", "dijit/form/Button", "dojo/domReady!"], function(parser){
+			parser.parse();
+		});
+	</script>
+
+
+</head>
+<body class="claro">
+    <div id="nav" class="nav">
+        Dojo Toolkit
+    </div>
+    <h1 id="greeting">Hello</h1>
+    
+    <h1>Press R, G, B to change Color!!</h1>
+    <div class="space">
+    keyCode value: <input type="text" id="keyCode" size="2">
+    </div>
+    <div id="myDiv" class="space">
+        
+    </div>
+    <div class="space">
+    <button id="blue" class="btn">to Blue</button>
+    <button id="green" class="btn">to Green</button>
+    <button id="red" class="btn">to Red</button>
+    </div>
+    <div class="space">
+    <button id="reset" class="btn">Reset</button>
+    </div>
+    <div class="space">
+        <button id="progButtonNode" type="button"></button>
+        <button data-dojo-type="dijit/form/Button" type="button">Click me too!
+            <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+                require(["dojo/dom"], function(dom){
+                    dom.byId("result2").innerHTML += "Thank you! ";
+                });
+            </script>
+        </button>
+    </div>
+    <div class="claro">
+        <h2 id="result1">
+            
+        </h2>
+        <h2 id="result2">
+            
+        </h2>
+    </div>
+    <iframe name="frame" style="display:none;"></iframe>
+    <form data-dojo-type="dijit/form/Form" class="form" method="post" target="frame">
+    <script type="dojo/method" event="onSubmit">
+        require([
+                'dojo/dom',
+                'dojo/domReady!'
+            ], function (dom) {
+                var name = dom.byId('name').value;
+                var sex = dom.byId('sex').value;
+                var age = dom.byId('age').value;
+                var bday = dom.byId('bday').value;
+                var error = dom.byId('error');
+                var result = dom.byId('result');
+                var nowdate = new Date();
+                var olddate = new Date(bday);
+                var t = nowdate-olddate;
+                t = t/1000
+                console.log(nowdate-olddate);
+                var years = Math.floor(t / 31536000);
+                var months = Math.floor(t / 2629746000);
+                var days = Math.floor((t % 31536000) / 86400); 
+                var hours = Math.floor(((t % 31536000) % 86400) / 3600);
+                var minutes = Math.floor((((t % 31536000) % 86400) % 3600) / 60);
+                var seconds = Math.floor((((t % 31536000) % 86400) % 3600) % 60);
+                console.log(years+" "+months+" "+days+" "+hours+" "+minutes+" "+seconds)
+                result.innerHTML = "name : "+name+ "<br/>"+
+                "sex : "+sex+"<br/>"+
+                "date of birth : "+bday+"<br/>"+
+                "age : "+years+" years "+months+" month "+days+" days "+"<br/>";
+                
+                
+        });
+        if(this.validate()){
+            var nowdate = new Date();
+            var olddate = new Date(bday.value);
+            var t = nowdate-olddate;
+            t = t/1000
+            console.log(nowdate);
+            console.log(olddate);
+            console.log(nowdate-olddate);
+            var years = Math.floor(t / 31536000);
+            var months = Math.floor(t / 2629746000);
+            var days = Math.floor((t % 31536000) / 86400); 
+            var hours = Math.floor(((t % 31536000) % 86400) / 3600);
+            var minutes = Math.floor((((t % 31536000) % 86400) % 3600) / 60);
+            var seconds = Math.floor((((t % 31536000) % 86400) % 3600) % 60);
+            console.log(years+" "+months+" "+days+" "+hours+" "+minutes+" "+seconds)
+            
+            if(years!=age.value){
+                error.innerHTML = 'Incorrect age not sync with date of birth';
+                return false;
+            }else{
+                error.innerHTML = '';
+                return confirm('Form is valid, press OK to submit');
+            }
+        }else{
+            alert('Form contains invalid data.  Please correct first');
+            return false;
+        }
+        return true;
+        
+    </script>
+    <div>
+        <span class="inputhead">Name</span>
+        <input type="text" required="true" name="name" id="name"
+            placeholder="Your Name" data-dojo-type="dijit/form/ValidationTextBox" missingMessage="Please enter your name!" />
+    </div>
+    <div >
+        <span class="inputhead">Sex</span>
+        <select id="sex" data-dojo-type="dijit/form/FilteringSelect"
+            name="sex" missingMessage="Ooops!  You forgot your sex!" required>
+            <option value="">Select your Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div>
+        <span class="inputhead">Date of Birth</span>
+        <input type="text" required="true" name="bday" id="bday" data-dojo-type="dijit/form/DateTextBox" />
+        <div id="error"></div>
+    </div>
+    <div>
+        <span class="inputhead">Age</span>
+        <input id="age" type="text" data-dojo-type="dijit/form/NumberTextBox" name= "age"
+    required="true"  data-dojo-props="constraints:{min:0,max:120,places:0}
+    ,invalidMessage:'Please enter a numeric value.',rangeMessage:'Invalid elevation.'" placeholder="Please enter between 0-120"/>
+    </div>
+    <div>
+        <button data-dojo-type="dijit/form/Button" type="button">Cancel
+            <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+                require(["dojo/dom"], function(dom){
+                    dom.byId("name").value = "";
+                    dom.byId("sex").selectedIndex = -1;
+                    dom.byId("bday").value = "";
+                    dom.byId("age").value = "";
+                });
+            </script>
+        </button>
+        <input type="submit" value="Submit Form" id="busyButton" data-dojo-type="dojox/form/BusyButton"
+		   label="Submit Form" busyLabel="Submitting Form..." timeout="1000" />
+    </div>
+    </form>
+    <div id="result">
+        
+    </div>
+    <!-- load Dojo -->
+    <script>
+        require([
+            'dojo/dom',
+            'dojo/domReady!'
+        ], function (dom) {
+            var greeting = dom.byId('greeting');
+            var bday = dom.byId("bday");
+            bday.value = new Date();
+            greeting.innerHTML += ' from Dojo!';
+        });
+        require(["dojo/on","dojo/dom","dojo/dom-style", "dojo/domReady!"], function(on,dom,domStyle) {
+            on(document, "keyup", function(event) {
+                var nav = dom.byId("nav");
+                dom.byId("keyCode").value =event.keyCode;
+                 if(event.keyCode==66){
+                    domStyle.set(myDiv, "backgroundColor", "#4454f9");
+                    domStyle.set(nav, "backgroundColor", "#4454f9");
+                 }
+                 if(event.keyCode==71){
+                    domStyle.set(myDiv, "backgroundColor", "#44f454");
+                    domStyle.set(nav, "backgroundColor", "#44f954");
+                 }
+                 if(event.keyCode==82){
+                    domStyle.set(myDiv, "backgroundColor", "#f95454");
+                    domStyle.set(nav, "backgroundColor", "#f95454");
+                 }
+            });
+        });
+        require(["dojo/on", "dojo/dom", "dojo/dom-style", "dojo/mouse", "dojo/domReady!"],
+        function(on, dom, domStyle, mouse) {
+            var changeGreen = dom.byId("green"),
+                myDiv = dom.byId("myDiv"),
+                changeBlue = dom.byId("blue"),
+                changeRed = dom.byId("red")
+
+            on(changeBlue, mouse.enter, function(evt){
+                domStyle.set(myDiv, "backgroundColor", "#4454f9");
+                domStyle.set(nav, "backgroundColor", "#4454f9");
+            });
+            on(changeRed, mouse.enter, function(evt){
+                domStyle.set(myDiv, "backgroundColor", "#f95454");
+                domStyle.set(nav, "backgroundColor", "#f95454");
+            });
+            on(changeGreen, mouse.enter, function(evt){
+                domStyle.set(myDiv, "backgroundColor", "#44f454");
+                
+                domStyle.set(nav, "backgroundColor", "#44f954");
+            });
+        });
+        require(["dojo/on","dojo/dom","dojo/dom-style", "dojo/mouse","dojo/domReady!"],
+        function(on,dom,domStyle,mouse){
+            
+            var reset = dom.byId("reset");
+            on(document, "keyup", function(event) {
+                if(event.keyCode==81){
+                    domStyle.set(myDiv, "backgroundColor", "#000");
+                    domStyle.set(nav, "backgroundColor", "#d4d4d4");
+                }
+            });
+            on(reset, mouse.enter, function(evt){
+                domStyle.set(myDiv, "backgroundColor", "#000");
+                domStyle.set(nav, "backgroundColor", "#d4d4d4");
+            });
+        });
+        // $("#tester").submit(function(e) {
+        //     e.preventDefault();
+        // });
+    </script>
+</body>
+</html>

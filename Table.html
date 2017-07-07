@@ -1,0 +1,259 @@
+<html>
+    <head>
+        <link  rel="stylesheet" type="text/css"  href="style.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body onLoad="buildHtmlTable('#colorTable')">
+        <table name="test1">
+            <tr class="rowhead">
+                <th  class="no">
+                    No.
+                </th>
+                <th class="id">
+                    ID
+                </th>
+                <th class="namehead">
+                    Name
+                </th>
+                <th class="age">
+                    Age
+                </th>
+            </tr>
+            <tr class="rowodd">
+                <td class="no">
+                    1
+                </td>
+                <td class="id">
+                    E001
+                </td>
+                <td class="name">
+                    John
+                </td>
+                <td class="age">
+                    25
+                </td>
+            </tr>
+            <tr class="roweven">
+                <td class="no">
+                    2
+                </td>
+                <td class="id">
+                    E002
+                </td>
+                <td class="name">
+                    Jennifer
+                </td>
+                <td class="age">
+                    30
+                </td>
+            </tr>
+            <tr class="rowodd">
+                <td class="no">
+                    3
+                </td>
+                <td class="id">
+                    E003
+                </td>
+                <td class="name">
+                    Mark
+                </td>
+                <td class="age">
+                    33
+                </td>
+            </tr>
+            <tr class="roweven">
+                <td class="no">
+                    4
+                </td>
+                <td class="id">
+                    E005
+                </td>
+                <td class="name">
+                    Rose
+                </td>
+                <td class="age">
+                    32
+                </td>
+            </tr>
+        </table>
+        <div name="test2" style="width:100%;margin-top: 100px;">
+            <div class="bigbox">
+                <div class="box">
+                    <p>Text</p>
+                    <input id="text" type="text"/>
+                </div>
+                <div class="box">
+                    <p>Size</p>
+                    <input id="size" type="number"/>
+                </div>
+                <div class="box">
+                    <p>color</p>
+                    <select id="colorlist">
+                        <option value="red">red</option>
+                        <option value="blue">green</option>
+                        <option value="yellow">yellow</option>
+                        <option value="green">green</option>
+                    </select>
+                <button onclick="test()">show</button>
+                </div>
+            </div>
+            <div class="panel" id="panel">
+                Panel
+            </div>
+        </div>
+        <div name="test3">
+            <table id="colorTable">
+            </table>
+        </div>
+        <div name="test4">
+            <table id="myTable">
+                <tr class="rowhead">
+                    <th  class="no">
+                        No.
+                    </th>
+                    <th class="id">
+                        ID
+                    </th>
+                    <th class="namehead">
+                        Name
+                    </th>
+                    <th class="age">
+                        Age
+                    </th>
+                </tr>
+                <tr class="rowodd">
+                    <td class="no">
+                        
+                    </td>
+                    <td class="id">
+                        
+                    </td>
+                    <td class="name">
+                        
+                    </td>
+                    <td class="age">
+                        
+                    </td>
+                </tr>
+            </table>
+            <div class="bigbox">
+                <div class="box">
+                    <p>ID</p>
+                    <input id="id" type="text"/>
+                </div>
+                <div class="box">
+                    <p>Name</p>
+                    <input id="nameText" type="text"/>
+                </div>
+                <div class="box">
+                    <p>Age</p>
+                    <input id="ageText" type="text"/>
+                </div>
+                <button onclick="check()">Add</button>
+                <button onclick="removeData(index)">delete</button>
+            </div>
+        </div>
+        <script>
+            var i = 1;
+            function check(){
+                var regexName = /^[A-z]+$/;
+                var regexAge = /^[1-9][0-9]*$/;
+                var checkName = regexName.test(document.getElementById("nameText").value);
+                var checkAge =regexAge.test(document.getElementById("ageText").value);
+                if(checkName && checkAge){
+                    var id = document.getElementById("id").value;
+                    var name = document.getElementById("nameText").value;
+                    var age = document.getElementById("ageText").value;
+                    addNewData(id ,name, age);
+                }else{
+                    if(checkName){
+                        alert("Age Number must be Positive Number.");
+                    }else{
+                        alert("Name must be English Only.");
+                    }
+
+                }
+            }
+            function test(){
+                var text = document.getElementById("text").value;
+                var size = document.getElementById("size").value;
+                var color = document.getElementById("colorlist").value;
+                var panel = document.getElementById("panel")
+                panel.innerHTML = text;
+                panel.style.fontSize = size+"px";
+                panel.style.color = color;
+                panel.style.borderColor = color;
+            }
+            var myList = [
+                { "colorType": "Primary Colors","color":"Red", "colorCode": "#FF0000" },
+                { "colorType": "Colors","color":"White", "colorCode": "#FFFFFF" },
+                { "colorType": "Primary Colors","color":"Green", "colorCode": "#00FF00" },
+                { "colorType": "Colors","color":"Black", "colorCode": "#000000" },
+                { "colorType": "Primary Colors","color":"Green", "colorCode": "#00FF00" },
+            ];
+
+            // Builds the HTML Table out of myList.
+            function buildHtmlTable(selector) {
+                var columns = addAllColumnHeaders(myList, selector);
+                //console.log(columns);
+                for (var i = 0; i < myList.length; i++) {
+                    var row$ = $('<tr />');
+                    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+                        var cellValue = myList[i][columns[colIndex]];
+                        if (cellValue == null) cellValue = "";
+                        row$.append($('<td/>').html(cellValue));
+                    }
+                    $(selector).append(row$);
+                    // console.log(row$);
+                }
+            }
+
+            // Adds a header row to the table and returns the set of columns.
+            // Need to do union of keys from all records as some records may not contain
+            // all records.
+            function addAllColumnHeaders(myList, selector) {
+                var columnSet = [];
+                var headerTr$ = $('<tr/>');
+
+                for (var i = 0; i < myList.length; i++) {
+                    var rowHash = myList[i];
+                    for (var key in rowHash) {
+                        if ($.inArray(key, columnSet) == -1) {
+                            columnSet.push(key);
+                            headerTr$.append($('<th style="display: none;"/>').html(key));
+                        }
+                    }
+                }
+                // $(selector).append(headerTr$);
+                return columnSet;
+            }
+            function addNewData(id , name , age) {
+                var table = document.getElementById("myTable");
+                var row = table.insertRow(i);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = i;
+                cell2.innerHTML = id;
+                cell3.innerHTML = name;
+                cell4.innerHTML = age;
+                row.id = i;
+                selectData(row);
+                i++;
+            }
+            for(var j = 1; j<i.length ; j++){
+                var getrow = document.getElementById(j);
+                getrow.addEventListener("click",selectData(getrow));
+            }
+            function selectData(r){
+                var setindex = r.id;
+                return setindex
+            }
+            function removeData(){;
+                document.getElementById("myTable").deleteRow();
+            }
+        </script>
+    </body>
+    
+</html>

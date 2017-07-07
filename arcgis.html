@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Hello Dojo!</title>   
+    
+    <link rel="stylesheet" href="arcgis.css">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+    <!--load arcgis-->
+    <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.20/dijit/themes/claro/claro.css">
+    <script src="https://js.arcgis.com/3.20/"></script>
+    <script >
+    require([
+        "dojo/ready", 
+        "dojo/parser", 
+        "dijit/layout/ContentPane", 
+        "dijit/layout/BorderContainer",
+        "dijit/form/ValidationTextBox",
+        "dijit/form/Button"
+        ], function(ready,parser) {
+        ready(function(){
+            parser.parse();
+        });
+    });
+    </script>
+    <script >
+        var levelOrFactor = 5;
+        var map,td;
+        var graphicAdd = [];
+        var sref = {wkid:102100};
+        require([
+            "esri/map",
+            "esri/graphic",
+            "esri/geometry/Point",
+            "esri/Color",
+            "esri/toolbars/draw",
+            "esri/geometry/webMercatorUtils",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/layers/ArcGISDynamicMapServiceLayer",
+            "esri/layers/ImageParameters",
+            "esri/layers/GraphicsLayer",
+            "dijit/form/Button",
+            "dojo/on",
+            "dojo/dom",
+            "dojo/domReady!"
+            ], function(Map,Graphic,Point,Color,Draw,webMercatorUtils,SimpleMarkerSymbol,ArcGISDynamicMapServiceLayer,
+            ImageParameters,GraphicsLayer,Button,on,dom) {
+                map = new Map("map", {
+                    basemap: "streets",
+                    center:[100.523186,13.736717,sref],
+                    zoom: 5
+                });
+                // var imageParameters = new ImageParameters();
+                // imageParameters.format = "jpeg";
+                // var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer", {
+                //     "opacity" : 0.5,
+                //     "imageParameters" : imageParameters
+                // });
+                // map.addLayer(dynamicMapServiceLayer);
+                map.on("click",clickhandle);
+                var markerSymbol = new SimpleMarkerSymbol();
+                markerSymbol.setColor(new Color("#d4d4d4"));
+                var glayer = new GraphicsLayer();
+                function clickhandle(evt){
+                    
+                    var point = new Point(evt.mapPoint.x,evt.mapPoint.y,sref)
+                    
+                    var graphic = new Graphic(point, markerSymbol)
+                    // glayer.add(graphic);
+                    // map.graphics.add(graphic);
+                    // tb = new Draw(map);
+                    // tb.on("draw-complete", addGraphic);
+                    // map.disableMapNavigation();
+                    // tb.activate(Draw.MULTI_POINT);
+                    // var mp = webMercatorUtils.geographicToWebMercator(geometry);
+                    // console.log(mp.x+","+mp.y)
+                    // map.centerAt(new Point(evt.x,evt.y);
+                }
+                // function addGraphic(evt) {
+                    //deactivate the toolbar and clear existing graphics 
+                    // tb.deactivate(); 
+                    // map.enableMapNavigation();
+                    // console.log(graphic);
+                // }
+                var createbtn = new Button({
+                    onClick: function(){
+                        var ms = new SimpleMarkerSymbol();
+                        ms.setColor(new Color("#d4d4d4"));
+                        var lat = dom.byId("lat").value;
+                        var long = dom.byId("long").value;
+                        var mp = webMercatorUtils.lngLatToXY(long, lat);
+                        var point = new Point(mp,sref);
+                        
+                        var gp = new Graphic(point, ms);
+                        glayer.add(gp);
+                        // map.addLayers(glayer);
+                        map.graphics.add(gp);
+                        
+                    }
+                }, "create").startup();
+                var zoombtn = new Button({
+                    onClick: function(){
+                        var lat = dom.byId("lat").value;
+                        var long = dom.byId("long").value;         
+                        var mp = webMercatorUtils.lngLatToXY(long, lat);
+                        var point = new Point(mp,sref);
+                        map.centerAndZoom(point, levelOrFactor)
+                        levelOrFactor = levelOrFactor+2;
+                    }
+                }, "zoom").startup();
+                var clearallbtn = new Button({
+                    onClick: function(){
+                        map.graphics.clear();
+                    }
+                }, "clearall").startup();
+                var clear = new Button({
+                    onClick: function(){
+
+                        console.log(glayer);
+                        //map.graphics.enableMouseEvents();
+                        var clickEvents = map.graphics.on("click",handleClear);
+                        function handleClear(evt){
+                            evt.graphic.hide();
+                            clickEvents.remove();
+                            //map.graphics.disableMouseEvents();
+                        }
+                        
+                    }
+                }, "clear").startup();
+            });
+    </script>
+    </head>
+    <body class="claro">
+        <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer">
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'leading'" id="map" style="width: 1000px;"></div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" id="content">
+            <h2>Hello World!</h2>
+            <div id="inputblock">
+                <span id="headtext">Latitude:</span><input type="text" required="true" name="lat" id="lat"
+                    placeholder="lat" data-dojo-type="dijit/form/ValidationTextBox" missingMessage="Please enter your latitude!" />
+            </div>
+            <div id="inputblock">
+                <span id="headtext">Longtitude:</span><input type="text" required="true" name="long" id="long"
+                    placeholder="long" data-dojo-type="dijit/form/ValidationTextBox" missingMessage="Please enter your longtitude!" />
+            </div> 
+            <div id="inputblock">
+                <button type="button" id="create">Create
+                </button>
+                <button type="button" id="zoom">Zoom                
+                </button>
+            </div>
+            <div>
+                <button type="button" id="clearall">Clear All
+                </button>
+                <button type="button" id="clear">Clear
+                </button>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
